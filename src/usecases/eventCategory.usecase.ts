@@ -6,14 +6,14 @@ class EventCategoryUseCase {
 
     constructor() {
         this.eventCategoryRepository = new EventCategoryRepositoryPrisma();
-    }
+    };
 
     async createEventCategory(eventCategoryCreate: EventCategoryCreate): Promise<EventCategory> {
         return await this.eventCategoryRepository.createEvent(eventCategoryCreate);
-    }
+    };
     async getAllCategories(): Promise<EventCategory[]> {
       return await this.eventCategoryRepository.getAllCategories();
-  }
-}
+  };
+};
 
 export { EventCategoryUseCase };
