@@ -30,7 +30,7 @@ class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
                             participantName,
                             participantEmail,
                             price: ticketType.price,
-                            status: 'issued',
+                            status,
                             purchaseDate: new Date(),
                         }))
                     );
