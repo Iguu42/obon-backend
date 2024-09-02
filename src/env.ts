@@ -8,6 +8,10 @@ const envSchema = z.object({
     AWS_ACCESS_KEY_ID: z.string(),
     AWS_SECRET_ACCESS_KEY: z.string(),
     AWS_BUCKET: z.string(),
+    REDIS_HOST: z.string(),
+    REDIS_PORT: z.string(),
+    REDIS_USERNAME: z.string(),
+    REDIS_PASSWORD: z.string(),
     });
 
     export const env = envSchema.parse(process.env); 
