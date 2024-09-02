@@ -12,7 +12,7 @@ const queuesConfig: QueueConfig[] = [
     name: 'purchaseOrder',
     processJob: async (job) => {
       const purchaseOrderUseCase = new PurchaseOrderUseCase();
-      console.log('Processing job:', job.data);
+      console.log('Processing job:', job.data);  
       return await purchaseOrderUseCase.create(job.data);
     }
   }
@@ -30,10 +30,10 @@ export function createQueues(): void {
         port: parseInt(env.REDIS_PORT as string),
         password: env.REDIS_PASSWORD as string,
         username: env.REDIS_USERNAME as string,
-        
       }
     });
     queues[name].process(processJob);
+    console.log(`Queue ${name} created and processing jobs.`); 
   };
 };
 
@@ -42,5 +42,6 @@ export function getQueue(name: string): Bull.Queue {
     throw new Error(`Queue ${name} does not exist.`);
   };
 
+  console.log(`Returning queue ${name}`); 
   return queues[name];
 };
