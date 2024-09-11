@@ -4,6 +4,7 @@ import cors from '@fastify/cors';
 import { eventCategoryRoutes } from "./routes/eventCategory.routes";
 import { producerRoutes } from "./routes/producer.routes";
 import { assetRoutes } from "./routes/asset.routes";
+import { userRoutes } from "./routes/user.routes";
 const app: FastifyInstance = fastify({ logger: true });
 
 const port = parseInt(env.PORT as string);
@@ -22,6 +23,9 @@ app.register(producerRoutes, {
 });
 app.register(assetRoutes, {
     prefix: '/assets'
+});
+app.register(userRoutes, {
+    prefix: '/users'
 });
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
