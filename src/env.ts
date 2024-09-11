@@ -12,6 +12,7 @@ const envSchema = z.object({
     REDIS_PORT: z.string(),
     REDIS_USERNAME: z.string(),
     REDIS_PASSWORD: z.string(),
+    JWT_PUBLIC_KEY: z.string().url()
     });
 
     export const env = envSchema.parse(process.env); 
