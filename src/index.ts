@@ -5,6 +5,7 @@ import { eventCategoryRoutes } from "./routes/eventCategory.routes";
 import { producerRoutes } from "./routes/producer.routes";
 import { assetRoutes } from "./routes/asset.routes";
 import { purchaseOrderRoutes } from "./routes/purchaseOrder.routes";
+import  {ticketTypeRoutes}  from "./routes/ticketType.routes";
 const app: FastifyInstance = fastify({ logger: true });
 
 const port = parseInt(env.PORT as string);
@@ -26,6 +27,10 @@ app.register(assetRoutes, {
 });
 app.register(purchaseOrderRoutes,{
     prefix: '/purchaseorders'
+});
+
+app.register(ticketTypeRoutes,{
+    prefix: '/ticketType'
 });
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
