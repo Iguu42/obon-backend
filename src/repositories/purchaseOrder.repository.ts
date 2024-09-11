@@ -12,32 +12,30 @@ class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
                 const ticketCreationData: any[] = [];
 
                 for (const ticketTypeData of ticketTypes) {
-                    const { ticketTypeId, quantityTickets, participantName, participantEmail } = ticketTypeData;
+                    const { ticketTypeId, participantName, participantEmail } = ticketTypeData;
 
                     const ticketType = await prisma.ticketType.findUnique({
                         where: { id: ticketTypeId }
                     });
 
-                    if (!ticketType || ticketType.quantity < quantityTickets) {
-                        throw new Error(`Insufficient ticket quantity available for ${ticketType?.description}. Available: ${ticketType?.quantity}, Requested: ${quantityTickets}`);
+                    if (!ticketType || ticketType.quantity < 1) {
+                        throw new Error(`Insufficient ticket quantity available for ${ticketType?.description}. Available: ${ticketType?.quantity}, Requested: 1`);
                     }
 
-                    totalPrice += ticketType.price * quantityTickets;
+                    totalPrice += ticketType.price;
 
-                    ticketCreationData.push(
-                        ...Array.from({ length: quantityTickets }).map(() => ({
-                            ticketTypeId,
-                            participantName,
-                            participantEmail,
-                            price: ticketType.price,
-                            status,
-                            purchaseDate: new Date(),
-                        }))
-                    );
+                    ticketCreationData.push({
+                        ticketTypeId,
+                        participantName,
+                        participantEmail,
+                        price: ticketType.price,
+                        status,
+                        purchaseDate: new Date(),
+                    });
 
                     await prisma.ticketType.update({
                         where: { id: ticketTypeId },
-                        data: { quantity: ticketType.quantity - quantityTickets }
+                        data: { quantity: ticketType.quantity - 1 }
                     });
                 }
 
@@ -46,7 +44,7 @@ class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
                         userId,
                         eventId,
                         totalPrice,
-                        quantityTickets: ticketTypes.reduce((acc, item) => acc + item.quantityTickets, 0),
+                        quantityTickets: ticketTypes.length,
                         status
                     }
                 });
@@ -61,9 +59,9 @@ class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
                 return purchaseOrder;
             });
         } catch (error) {
-            throw new Error(`${error}`);
+            throw new Error(`Error creating purchase order: ${error}`);
         }
     }
-}
+};
 
 export { PurchaseOrderRepositoryPrisma };

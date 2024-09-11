@@ -1,6 +1,5 @@
 export interface TicketTypeQuantity {
     ticketTypeId: string;
-    quantityTickets: number;
     participantName: string;
     participantEmail: string;
 }
@@ -10,7 +9,6 @@ export interface PurchaseOrder {
     userId: string;
     eventId: string;
     totalPrice: number;
-    quantityTickets: number;
     status: string;
 }
 
