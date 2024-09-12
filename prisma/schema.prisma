@@ -119,16 +119,17 @@ model EventOrganizers {
 }
 
 model TicketType {
-  id             String    @id @default(uuid())
-  eventId        String
-  description    String
-  price          Float
-  quantity       Int
-  salesStartDate DateTime?
-  salesEndDate   DateTime?
-  isActive       Boolean   @default(true)
-  event          Event     @relation(fields: [eventId], references: [id])
-  tickets        Ticket[]
+  id                        String    @id @default(uuid())
+  eventId                   String
+  description               String
+  price                     Float
+  quantity                  Int
+  quantityAvailablePerUser  Int
+  salesStartDate            DateTime?
+  salesEndDate              DateTime?
+  isActive                  Boolean   @default(true)
+  event                     Event     @relation(fields: [eventId], references: [id])
+  tickets                   Ticket[]
 
   @@map("ticketTypes")
 }
