@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma-client";
-import { Event, EventCreate, EventRepository } from "../interfaces/event.interface";
+import { Event, EventCreate, EventPreview, EventRepository } from "../interfaces/event.interface";
 import { Prisma } from '@prisma/client';
 class EventRepositoryPrisma implements EventRepository {
     async create(data: EventCreate): Promise<Event> {
@@ -28,6 +28,36 @@ class EventRepositoryPrisma implements EventRepository {
                 throw new Error('Validation error. Please check the data you are sending.');
             }
             throw new Error('An unexpected error occurred while creating the event.');
+        }
+    }
+
+    async getEventsByCategory(categoryId: string): Promise<EventPreview[]> {
+        try {
+            return await prisma.event.findMany({
+                where: {
+                    categoryId
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    description:true,
+                    addressId: true,
+                    startDate: true,
+                    endDate:true,
+                    format:true,
+                    assets: {
+                        select: {
+                            id: true,
+                            url: true,
+                            type: true,
+                            description: true
+                        }
+                    }, 
+                    Address:true
+                }
+            });
+        } catch (error) {
+            throw new Error('Unable to get events by category');
         }
     }
 }
