@@ -19,6 +19,10 @@ class EventUseCase {
     async getEventsByCategory(categoryId:string): Promise<EventPreview[]>{
         return await this.eventRepository.getEventsByCategory(categoryId);
     }
+
+    async getEventById(id:string):Promise<any>{
+        return await this.eventRepository.getEventById(id);
+    }
 }
 
 export { EventUseCase };
