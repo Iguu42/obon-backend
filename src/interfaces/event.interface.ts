@@ -48,7 +48,60 @@ export interface EventCreate {
     addressId: string;
 }
 
+export interface EventById {
+    id: string;
+    title: string;
+    description: string;
+    capacity: number;
+    status: string | null;
+    startDate: Date;
+    endDate: Date;
+    salesStartDate: Date | null;
+    showStartDate: Date  | null;
+    format: string;
+    ageRating: number;
+    additionalDetails: string;
+    Address: {
+      city: string;
+      complement: string | null;
+      neighborhood: string;
+      number: string;
+      state: string;
+      street: string;
+      zipCode: string;
+    };
+    ticketTypes: {
+      id: string;
+      description: string;
+      price: number;
+      quantityAvailablePerUser: number;
+      salesStartDate: Date  | null;
+      salesEndDate: Date  | null;
+      isActive: boolean;
+    }[];
+    assets: {
+      id: string;
+      url: string;
+      type: string;
+      description: string | null;
+    }[];
+    attractions: {
+      id: string;
+      name: string;
+      description: string | null;
+      imageUrl: string;
+    }[];
+    producers: {
+      id: string;
+      name: string;
+      email: string;
+      description: string | null;
+      imageUrl: string;
+    };
+  }
+
 export interface EventRepository {
     create(data: EventCreate): Promise<Event>;
     getEventsByCategory(categoryId:string):Promise<EventPreview[]>;
+    getEventById(id:string):Promise<EventById>
 }

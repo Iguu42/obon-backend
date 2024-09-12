@@ -12,6 +12,7 @@ class TicketTypeRepositoryPrisma implements TicketTypeRepository {
           description: data.description,
           price: data.price,
           quantity: data.quantity,
+          quantityAvailablePerUser: data.quantityAvailablePerUser,
           salesStartDate: data.salesStartDate ?? null,
           salesEndDate: data.salesEndDate ?? null,
           isActive: data.isActive || true,
