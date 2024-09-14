@@ -5,6 +5,7 @@ import {
 	EventCreate,
 	EventPreview,
 	EventRepository,
+	RecentEvents,
 } from "../interfaces/event.interface";
 import { Prisma } from "@prisma/client";
 class EventRepositoryPrisma implements EventRepository {
@@ -177,6 +178,33 @@ class EventRepositoryPrisma implements EventRepository {
             });
         } catch (error) {
             throw new Error('Unable to get events by creator id');
+        }
+	}
+
+	async getRecentEvents(): Promise<RecentEvents[]> {
+		  try {
+            return await prisma.event.findMany({
+                take: 10,
+                orderBy: {
+                    startDate: 'desc'
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    addressId: true,
+                    startDate: true,
+                    assets: {
+                        select: {
+                            id: true,
+                            url: true,
+                            type: true,
+                            description: true
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            throw new Error('Unable to get recent events');
         }
 	}
 }
