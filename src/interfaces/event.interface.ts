@@ -104,4 +104,5 @@ export interface EventRepository {
     create(data: EventCreate): Promise<Event>;
     getEventsByCategory(categoryId:string):Promise<EventPreview[]>;
     getEventById(id:string):Promise<EventById>
+    getEventsByCreatorId(creatorId: string): Promise<EventPreview[]>;
 }
