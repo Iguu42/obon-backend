@@ -149,6 +149,36 @@ class EventRepositoryPrisma implements EventRepository {
 			throw new Error("Unable to get event by id");
 		}
 	}
+
+	async getEventsByCreatorId(creatorId: string): Promise<EventPreview[]> {
+		try {
+            return await prisma.event.findMany({
+                where: {
+                    creatorId
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    addressId: true,
+                    startDate: true,
+					description:true,
+					endDate:true,
+					format:true,
+                    assets: {
+                        select: {
+                            id: true,
+                            url: true,
+                            type: true,
+                            description: true
+                        }
+                    },
+					Address:true
+                }
+            });
+        } catch (error) {
+            throw new Error('Unable to get events by creator id');
+        }
+	}
 }
 
 export { EventRepositoryPrisma };

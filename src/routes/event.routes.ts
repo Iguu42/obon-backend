@@ -61,13 +61,26 @@ export async function eventRoutes(fastify: FastifyInstance) {
 
 	fastify.get<{ Params: { id: string } }>("/:id", {
 		handler: async (req, reply) => {
-            const { id } = req.params;
-            try {
-                const data = await eventUseCase.getEventById(id);
-                reply.code(200).send(data);
-            } catch (error) {
-                reply.code(404).send(error);
-            }
-        },
+			const { id } = req.params;
+			try {
+				const data = await eventUseCase.getEventById(id);
+				reply.code(200).send(data);
+			} catch (error) {
+				reply.code(404).send(error);
+			}
+		},
+	});
+
+	fastify.get<{ Params: { creatorId: string } }>("/creator/:creatorId", {
+		preHandler: [],
+		handler: async (req, reply) => {
+			const { creatorId } = req.params;
+			try {
+				const data = await eventUseCase.getEventsByCreatorId(creatorId);
+				reply.code(200).send(data);
+			} catch (error) {
+				reply.code(404).send(error);
+			}
+		},
 	});
 }

@@ -23,6 +23,10 @@ class EventUseCase {
     async getEventById(id:string):Promise<any>{
         return await this.eventRepository.getEventById(id);
     }
+
+    async getEventsByCreatorId(creatorId: string): Promise<EventPreview[]> {
+        return await this.eventRepository.getEventsByCreatorId(creatorId);
+    }
 }
 
 export { EventUseCase };
