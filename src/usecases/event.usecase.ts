@@ -1,4 +1,4 @@
-import { Event, EventCreate, EventPreview, EventRepository } from "../interfaces/event.interface";
+import { Event, EventCreate, EventPreview, EventRepository, RecentEvents } from "../interfaces/event.interface";
 
 class EventUseCase {
     private eventRepository: EventRepository;
@@ -26,6 +26,10 @@ class EventUseCase {
 
     async getEventsByCreatorId(creatorId: string): Promise<EventPreview[]> {
         return await this.eventRepository.getEventsByCreatorId(creatorId);
+    }
+
+    async getRecentEvents(): Promise<RecentEvents[]> {
+        return await this.eventRepository.getRecentEvents();
     }
 }
 

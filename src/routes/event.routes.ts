@@ -83,4 +83,13 @@ export async function eventRoutes(fastify: FastifyInstance) {
 			}
 		},
 	});
+
+	fastify.get("/recent", async (req, reply) => {
+		try {
+			const data = await eventUseCase.getRecentEvents();
+			reply.code(200).send(data);
+		} catch (error) {
+			reply.code(404).send(error);
+		}
+	});
 }
