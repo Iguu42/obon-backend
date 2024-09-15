@@ -1,4 +1,4 @@
-import { User, UserCreate, UserRepository, UserUpdateByClerk } from "../interfaces/user.interface";
+import { User, UserCreate, UserRepository, UserUpdate, UserUpdateByClerk } from "../interfaces/user.interface";
 import { UserRepositoryPrisma } from "../repositories/user.repository";
 
 class UserUseCase {
@@ -37,6 +37,14 @@ class UserUseCase {
         const data = await this.userRepository.findUserByExternalOrId(id);
         if (!data) throw new Error('User not found')
         return data;
+    }
+
+    async update({ id, role, cpf, phone }: UserUpdate): Promise<UserUpdate> {
+        const user = await this.userRepository.findUserByExternalOrId(id)
+        if(!user){
+            throw new Error('User not found');
+        }
+        return await this.userRepository.userUpdate({ id: user.id, role, cpf, phone });
     }
 }
 
