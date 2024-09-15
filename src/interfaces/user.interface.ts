@@ -29,4 +29,5 @@ export interface UserRepository {
     create(data: UserCreate): Promise<User>;
     delete(id: string): Promise<void>;
     userUpdateByClerk(data: UserUpdateByClerk): Promise<UserUpdateByClerk>;
+    findUserByExternalOrId(id: string): Promise<User | null>;
 }
