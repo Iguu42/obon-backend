@@ -1,5 +1,5 @@
 import { prisma } from "../database/prisma-client";
-import { User, UserCreate, UserRepository } from "../interfaces/user.interface";
+import { User, UserCreate, UserRepository, UserUpdate } from "../interfaces/user.interface";
 
 class UserRepositoryPrisma implements UserRepository {
 	async create(data: UserCreate): Promise<User> {
@@ -178,6 +178,24 @@ class UserRepositoryPrisma implements UserRepository {
 			throw new Error("Failed to find user by external id or id.");
 		}
 	}
+
+	async userUpdate(data: UserUpdate): Promise<UserUpdate> {
+		try {
+		  const result = await prisma.user.update({
+			where: {
+			  id: data.id,
+			},
+			data: {
+			  role: data.role,
+			  cpf: data.cpf,
+			  phone: data.phone,
+			},
+		  });
+		  return result;
+		} catch (error) {
+		  throw new Error("Failed to update user");
+		}
+	  }
 }
 
 export { UserRepositoryPrisma };
