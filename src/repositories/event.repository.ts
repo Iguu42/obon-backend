@@ -5,6 +5,7 @@ import {
 	EventCreate,
 	EventPreview,
 	EventRepository,
+	EventValidate,
 	RecentEvents,
 } from "../interfaces/event.interface";
 import { Prisma } from "@prisma/client";
@@ -206,6 +207,23 @@ class EventRepositoryPrisma implements EventRepository {
         } catch (error) {
             throw new Error('Unable to get recent events');
         }
+	}
+
+	async getEventToValidate(id:string): Promise <EventValidate>{
+		try{
+			return prisma.event.findFirstOrThrow({
+				where:{
+					id
+				},
+				select:{
+					id:true,
+					creatorId:true
+				}
+			})
+
+		}catch (error) {
+			throw new Error("Unable to get event by id");
+		}
 	}
 }
 
