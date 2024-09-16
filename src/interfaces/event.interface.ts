@@ -113,10 +113,16 @@ export interface RecentEvents {
 	}[];
 }
 
+export interface EventValidate {
+	id: string;
+	creatorId:string
+}
+
 export interface EventRepository {
 	create(data: EventCreate): Promise<Event>;
 	getEventsByCategory(categoryId: string): Promise<EventPreview[]>;
 	getEventById(id: string): Promise<EventById>;
 	getEventsByCreatorId(creatorId: string): Promise<EventPreview[]>;
 	getRecentEvents(): Promise<RecentEvents[]>;
+	getEventToValidate(id:string): Promise<EventValidate>;
 }

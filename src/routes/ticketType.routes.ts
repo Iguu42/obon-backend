@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { TicketTypeCreate } from "../interfaces/ticketType.interface";
 import { TicketTypeUseCase } from "../usecases/ticketType.usecase";
+import { jwtValidator } from "../middlewares/auth.middleware";
 
 const ticketTypeUseCase = new TicketTypeUseCase();
 
@@ -11,7 +12,7 @@ export async function ticketTypeRoutes(fastify: FastifyInstance) {
 function postTicketType(fastify: FastifyInstance) {
 	fastify.post("/", {
 		preHandler: [
-			/* Adicionar preHandler */
+			jwtValidator
 		],
 		handler: async (
 			req: FastifyRequest<{
