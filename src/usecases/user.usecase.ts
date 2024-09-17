@@ -2,15 +2,15 @@ import { User, UserCreate, UserRepository, UserUpdate, UserUpdateByClerk } from 
 import { UserRepositoryPrisma } from "../repositories/user.repository";
 
 class UserUseCase {
-	private userRepository: UserRepository = new UserRepositoryPrisma();
+    private userRepository: UserRepository = new UserRepositoryPrisma();
 
-	constructor() {}
+    constructor() { }
 
 
     async findAllEventsByExternalId(externalId: string): Promise<any> {
         return await this.userRepository.findAllEventsByExternalId(externalId);
     }
-    
+
     async create({ externalId, firstName, lastName, email }: UserCreate): Promise<User> {
         const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) {
@@ -41,7 +41,7 @@ class UserUseCase {
 
     async update({ id, role, cpf, phone }: UserUpdate): Promise<UserUpdate> {
         const user = await this.userRepository.findUserByExternalOrId(id)
-        if(!user){
+        if (!user) {
             throw new Error('User not found');
         }
         return await this.userRepository.userUpdate({ id: user.id, role, cpf, phone });

@@ -181,21 +181,21 @@ class UserRepositoryPrisma implements UserRepository {
 
 	async userUpdate(data: UserUpdate): Promise<UserUpdate> {
 		try {
-		  const result = await prisma.user.update({
-			where: {
-			  id: data.id,
-			},
-			data: {
-			  role: data.role,
-			  cpf: data.cpf,
-			  phone: data.phone,
-			},
-		  });
-		  return result;
+			const result = await prisma.user.update({
+				where: {
+					id: data.id,
+				},
+				data: {
+					role: data.role,
+					cpf: data.cpf,
+					phone: data.phone,
+				},
+			});
+			return result;
 		} catch (error) {
-		  throw new Error("Failed to update user");
+			throw new Error("Failed to update user");
 		}
-	  }
+	}
 }
 
 export { UserRepositoryPrisma };

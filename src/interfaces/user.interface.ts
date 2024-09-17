@@ -23,7 +23,7 @@ export interface UserUpdateByClerk {
 }
 
 export interface UserUpdate {
-    id:string
+	id: string
 	role?: string;
 	cpf?: string | null;
 	phone?: string | null;
@@ -37,5 +37,5 @@ export interface UserRepository {
 	delete(id: string): Promise<void>;
 	userUpdateByClerk(data: UserUpdateByClerk): Promise<UserUpdateByClerk>;
 	findUserByExternalOrId(id: string): Promise<User | null>;
-    userUpdate(data: UserUpdate): Promise<UserUpdate>;
+	userUpdate(data: UserUpdate): Promise<UserUpdate>;
 }
