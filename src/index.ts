@@ -4,6 +4,9 @@ import cors from '@fastify/cors';
 import { eventCategoryRoutes } from "./routes/eventCategory.routes";
 import { producerRoutes } from "./routes/producer.routes";
 import { assetRoutes } from "./routes/asset.routes";
+import { purchaseOrderRoutes } from "./routes/purchaseOrder.routes";
+import { ticketTypeRoutes } from "./routes/ticketType.routes";
+import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
 const app: FastifyInstance = fastify({ logger: true });
 
@@ -24,6 +27,18 @@ app.register(producerRoutes, {
 app.register(assetRoutes, {
     prefix: '/assets'
 });
+app.register(purchaseOrderRoutes, {
+    prefix: '/purchaseorders'
+});
+
+app.register(ticketTypeRoutes, {
+    prefix: '/ticketType'
+});
+
+app.register(eventRoutes, {
+    prefix: '/events'
+});
+
 app.register(userRoutes, {
     prefix: '/users'
 });
