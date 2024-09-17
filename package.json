@@ -25,6 +25,7 @@
 		"typescript": "^5.6.2"
 	},
 	"dependencies": {
+		"@clerk/fastify": "^1.0.43",
 		"@fastify/cors": "^9.0.1",
 		"@prisma/client": "^5.17.0",
 		"@types/bull": "^4.10.0",

@@ -8,10 +8,13 @@ import { purchaseOrderRoutes } from "./routes/purchaseOrder.routes";
 import  {ticketTypeRoutes}  from "./routes/ticketType.routes";
 import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
+import { clerkPlugin } from '@clerk/fastify';
+
 const app: FastifyInstance = fastify({ logger: true });
 
 const port = parseInt(env.PORT as string);
 
+app.register(clerkPlugin, {secretKey:env.CLERK_API_KEY});
 app.register(cors, {
     origin: [
         'http://localhost:5173',
