@@ -10,6 +10,9 @@ const permissions: Record<string, RoutePermissions> = {
 	"/events":{
 		POST:["admin", "user"]
 	},
+	"/events/created":{
+		GET:["admin", "user"]
+	},
 	"/ticketType":{
 		POST:["admin", "user"]
 	},
