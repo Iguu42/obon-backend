@@ -1,6 +1,6 @@
 import { createClerkClient } from "@clerk/fastify";
 import { env } from "../env";
-import { checkPermissions, Method } from "../constants/permissions";
+import { checkPermissions, Method, Role } from "../constants/permissions";
 import jwt from "jsonwebtoken";
 import jwksClient from "jwks-rsa";
 import { UserRepositoryPrisma } from "../repositories/user.repository";
@@ -30,6 +30,7 @@ export async function jwtValidator(req: any, reply: any) {
 			});
 		};
 
+		//Verify token validity
 		const decodedToken: any = await new Promise((resolve, reject) => {
 			jwt.verify(token, getKey, { algorithms: ["RS256"] }, (err, decoded) => {
 				if (err) {
@@ -41,12 +42,8 @@ export async function jwtValidator(req: any, reply: any) {
 		});
 
 		const externalId = decodedToken.sub;
-		//Verificar validade do token - OK
-		//Verificar existência do usuário clerk - OK
-		//Verificar existência do usuário no banco de dados - OK
-		//Verificar permissão do usuário para acessar a rota - OK
-		//Armarzenar usuário na requisição para utilizar nas lógicas do USECASE - OK?
 
+		//Verify if clerk user exists
 		const clerkUser = externalId
 			? await clerkClient.users.getUser(externalId)
 			: null;
@@ -62,18 +59,22 @@ export async function jwtValidator(req: any, reply: any) {
 			reply.code(403).send({ error: "Forbidden: Operation denied" });
 			return false;
 		}
-
-		/* Remover mock quando garantir que o usuário tem uma role - Definir se fica no publicMetadata, privateMetadata */
-		if (!allowedRoles.includes("admin")) {
+		//Verify user permission to acess route
+		const role = clerkUser.privateMetadata.role as Role
+		if (!allowedRoles.includes(role)) {
 			reply.code(403).send({ error: "Forbidden" });
 			return false;
 		}
-
-		const user = await new UserRepositoryPrisma().findUserByExternalId(
+		//Verify if user exists in database
+		const user = await new UserRepositoryPrisma().findUserByExternalOrId(
 			externalId
 		);
+		if(!user){
+			throw new Error("User not found")
+		}
 
-    req.params.externalId = externalId
+		//Store user in request
+    	req.params.externalId = externalId;
 		req.user = user;
 	} catch (error: any) {
 		console.error("JWT Verification Error:", error.message);

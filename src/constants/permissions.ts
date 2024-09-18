@@ -8,8 +8,13 @@ type RoutePermissions = {
 
 const permissions: Record<string, RoutePermissions> = {
 	"/users": {
-		GET: ["user", "producer", "admin"],
+		GET: ["producer", "admin"],
+		PATCH: ["user", "producer", "admin"]
 	},
+	"/users/events":{
+		DELETE: ["admin"],
+		GET: ["admin", "user"]
+	}
 };
 
 export function checkPermissions(
