@@ -53,7 +53,7 @@ export async function jwtValidator(req: any, reply: any) {
 			return false;
 		}
 
-		const allowedRoles = checkPermissions(req.url, req.method);
+		const allowedRoles = checkPermissions(req.context.config.url, req.context.config.method);
 
 		if (!allowedRoles) {
 			reply.code(403).send({ error: "Forbidden: Operation denied" });
