@@ -1,19 +1,40 @@
 export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
-export type Role = "user" | "producer" | "admin";
+export type Role = "user" | "admin";
 
 type RoutePermissions = {
 	[method in Method]?: Role[];
 };
 
 const permissions: Record<string, RoutePermissions> = {
-	"/users": {
-		GET: ["producer", "admin"],
-		PATCH: ["user", "producer", "admin"]
+	"/events":{
+		POST:["admin", "user"]
+	},
+	"/ticketType":{
+		POST:["admin", "user"]
+	},
+	"/users":{
+		GET:["admin","user"],
+		PATCH:["admin","user"]
 	},
 	"/users/events":{
-		DELETE: ["admin"],
-		GET: ["admin", "user"]
+		GET:["admin","user"]
+	},
+	"/purchaseorders":{
+		POST:["admin", "user"]
+	},
+	"/producers":{
+		GET:["admin", "user"],
+		POST:["admin", "user"]
+	},
+	"/event/categories":{
+		POST:["admin"]
+	},
+	"/assets/upload":{
+		POST:["admin", "user"]
+	},
+	"/assets/upload/:filename":{
+		DELETE:["admin", "user"]
 	}
 };
 
