@@ -1,11 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { PurchaseOrderAndTicketsCreate } from "../interfaces/purchaseOrder.interface";
 import { createQueues, getQueue } from "../lib/queue.lib";
+import { jwtValidator } from "../middlewares/auth.middleware";
 
 export async function purchaseOrderRoutes(fastify: FastifyInstance) {
   createQueues();
 
-  fastify.post<{ Body: PurchaseOrderAndTicketsCreate }>('/', async (req, reply) => {
+  fastify.post<{ Body: PurchaseOrderAndTicketsCreate }>('/', {preHandler:[jwtValidator], handler: async (req, reply) => {
     try {
       const queue = getQueue('purchaseOrder');
       console.log('Adding job to queue:', req.body);
@@ -16,5 +17,5 @@ export async function purchaseOrderRoutes(fastify: FastifyInstance) {
       console.error(error);
       reply.code(400).send({ error: error instanceof Error ? error.message : 'An unknown error occurred' });
     }
-  });
+  }});
 }

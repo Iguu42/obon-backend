@@ -8,16 +8,23 @@ import { purchaseOrderRoutes } from "./routes/purchaseOrder.routes";
 import { ticketTypeRoutes } from "./routes/ticketType.routes";
 import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
-const app: FastifyInstance = fastify({ logger: true });
+import { clerkPlugin } from '@clerk/fastify';
+import { webhookClerk } from "./routes/clerkWebhook.routes";
+
+const app: FastifyInstance = fastify({ logger: false });
 
 const port = parseInt(env.PORT as string);
 
+app.register(clerkPlugin, {secretKey:env.CLERK_API_KEY});
 app.register(cors, {
     origin: [
         'http://localhost:5173',
         'https://site-de-eventos-frontend.vercel.app'
     ]
 });
+app.register(webhookClerk, {
+    prefix:'/clerk'
+})
 app.register(eventCategoryRoutes, {
     prefix: '/event/categories'
 });
