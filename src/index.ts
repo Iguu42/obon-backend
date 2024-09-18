@@ -9,8 +9,9 @@ import  {ticketTypeRoutes}  from "./routes/ticketType.routes";
 import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
 import { clerkPlugin } from '@clerk/fastify';
+import { webhookClerk } from "./routes/clerkWebhook.routes";
 
-const app: FastifyInstance = fastify({ logger: true });
+const app: FastifyInstance = fastify({ logger: false });
 
 const port = parseInt(env.PORT as string);
 
@@ -21,6 +22,9 @@ app.register(cors, {
         'https://site-de-eventos-frontend.vercel.app'
     ]
 });
+app.register(webhookClerk, {
+    prefix:'/clerk'
+})
 app.register(eventCategoryRoutes, {
     prefix: '/event/categories'
 });
