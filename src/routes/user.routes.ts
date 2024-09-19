@@ -31,14 +31,14 @@ export async function userRoutes(fastify: FastifyInstance) {
 		},
 	});
 
-	fastify.patch<{ Body: UserUpdate; Params: { externalId: string } }>("/", {
+	fastify.patch<{ Body: UserUpdate}>("/", {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const externalId = req.params.externalId;
+			const user = req.user as User
 			const { role, cpf, phone } = req.body;
 			try {
 				const data = await userUseCase.update({
-					id: externalId,
+					id: user.id,
 					role,
 					cpf,
 					phone,
