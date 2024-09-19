@@ -30,7 +30,7 @@ export interface UserUpdate {
 }
 
 export interface UserRepository {
-	findAllEventsByExternalId(externalId: string): any;
+	findAllEventsByUserId(id: string): any;
 	findUserByExternalId(externalId: string): Promise<User>;
 	findByEmail(email: string): Promise<User | null>;
 	create(data: UserCreate): Promise<User>;

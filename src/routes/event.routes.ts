@@ -9,7 +9,7 @@ const eventRepository = new EventRepositoryPrisma();
 const eventUseCase = new EventUseCase(eventRepository);
 
 export async function eventRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: EventCreate, Params: { externalId: string } }>("/", {preHandler:[jwtValidator], handler:async (req, reply) => {
+	fastify.post<{ Body: EventCreate }>("/", {preHandler:[jwtValidator], handler:async (req, reply) => {
 		const {
 			title,
 			description,
@@ -22,9 +22,8 @@ export async function eventRoutes(fastify: FastifyInstance) {
 			producerId,
 			ageRating,
 			additionalDetails,
-			creatorId,
 		} = req.body;
-		const externalId = req.params.externalId
+		const user = req.user as User
 		try {
 			const data = await eventUseCase.create({
 				title,
@@ -38,8 +37,8 @@ export async function eventRoutes(fastify: FastifyInstance) {
 				producerId,
 				ageRating,
 				additionalDetails,
-				creatorId,
-			}, externalId);
+				creatorId: user.id,
+			});
 			reply.code(201).send(data);
 		} catch (error: any) {
 			console.error("Error in event creation route:", error);

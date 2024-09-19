@@ -73,8 +73,6 @@ export async function jwtValidator(req: any, reply: any) {
 			throw new Error("User not found")
 		}
 
-		//Store user in request
-    	req.params.externalId = externalId;
 		req.user = user;
 	} catch (error: any) {
 		console.error("JWT Verification Error:", error.message);

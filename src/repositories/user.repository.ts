@@ -48,16 +48,11 @@ class UserRepositoryPrisma implements UserRepository {
 		}
 	}
 
-	async findAllEventsByExternalId(externalId: string): Promise<any> {
+	async findAllEventsByUserId(id: string): Promise<any> {
 		try {
 			return await prisma.$transaction(async (prisma) => {
-				const user = await prisma.user.findFirstOrThrow({
-					where: { externalId },
-					select: { id: true },
-				});
-
 				const purchaseOrders = await prisma.purchaseOrder.findMany({
-					where: { userId: user.id },
+					where: { userId: id },
 					select: {
 						id: true,
 						eventId: true,
