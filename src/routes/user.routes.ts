@@ -19,13 +19,12 @@ export async function userRoutes(fastify: FastifyInstance) {
 		},
 	});
 
-	fastify.get<{ Params: { externalId: string } }>("/", {
+	fastify.get("/", {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const externalId = req.params.externalId;
+			const user = req.user as User
 			try {
-				const data = await userUseCase.findUserByExternalOrId(externalId);
-				reply.code(200).send(data);
+				reply.code(200).send(user);
 			} catch (error) {
 				reply.code(404).send(error);
 			}

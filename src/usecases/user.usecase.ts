@@ -34,9 +34,7 @@ class UserUseCase {
     }
 
     async findUserByExternalOrId(id: string): Promise<User | null> {
-        const data = await this.userRepository.findUserByExternalOrId(id);
-        if (!data) throw new Error('User not found')
-        return data;
+        return await this.userRepository.findUserByExternalOrId(id);
     }
 
     async update({ id, role, cpf, phone }: UserUpdate): Promise<UserUpdate> {
