@@ -9,7 +9,7 @@ const eventRepository = new EventRepositoryPrisma();
 const eventUseCase = new EventUseCase(eventRepository);
 
 export async function eventRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: EventCreate, Params: { externalId: string } }>("/", {preHandler:[jwtValidator], handler:async (req, reply) => {
+	fastify.post<{ Body: EventCreate }>("/", {preHandler:[jwtValidator], handler:async (req, reply) => {
 		const {
 			title,
 			description,
