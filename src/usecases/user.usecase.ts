@@ -7,8 +7,8 @@ class UserUseCase {
     constructor() { }
 
 
-    async findAllEventsByExternalId(externalId: string): Promise<any> {
-        return await this.userRepository.findAllEventsByExternalId(externalId);
+    async findAllEventsByUserId(id: string): Promise<any> {
+        return await this.userRepository.findAllEventsByUserId(id);
     }
 
     async create({ externalId, firstName, lastName, email }: UserCreate): Promise<User> {
