@@ -35,11 +35,10 @@ export async function userRoutes(fastify: FastifyInstance) {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
 			const user = req.user as User
-			const { role, cpf, phone } = req.body;
+			const { cpf, phone } = req.body;
 			try {
 				const data = await userUseCase.update({
 					id: user.id,
-					role,
 					cpf,
 					phone,
 				});
