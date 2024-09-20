@@ -9,8 +9,7 @@ class UserRepositoryPrisma implements UserRepository {
 					externalId: data.externalId,
 					firstName: data.firstName,
 					lastName: data.lastName,
-					email: data.email,
-					role: "user",
+					email: data.email
 				},
 			});
 		} catch (error) {
@@ -181,7 +180,6 @@ class UserRepositoryPrisma implements UserRepository {
 					id: data.id,
 				},
 				data: {
-					role: data.role,
 					cpf: data.cpf,
 					phone: data.phone,
 				},

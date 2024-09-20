@@ -4,7 +4,6 @@ export interface User {
 	firstName: string;
 	lastName: string;
 	email: string;
-	role: string;
 }
 
 export interface UserCreate {
@@ -24,7 +23,6 @@ export interface UserUpdateByClerk {
 
 export interface UserUpdate {
 	id: string
-	role?: string;
 	cpf?: string | null;
 	phone?: string | null;
 }

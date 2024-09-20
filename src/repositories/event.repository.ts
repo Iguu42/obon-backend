@@ -21,6 +21,7 @@ class EventRepositoryPrisma implements EventRepository {
 					categoryId: data.categoryId,
 					startDate: data.startDate,
 					endDate: data.endDate,
+					maxTicketsPerUser:data.maxTicketsPerUser,
 					format: data.format,
 					ageRating: data.ageRating,
 					additionalDetails: data.additionalDetails,
@@ -86,7 +87,6 @@ class EventRepositoryPrisma implements EventRepository {
 							description: true,
 							price: true,
                             quantity:true,
-							quantityAvailablePerUser: true,
 							salesStartDate: true,
 							salesEndDate: true,
 							isActive: true,
@@ -130,14 +130,14 @@ class EventRepositoryPrisma implements EventRepository {
 					},
 				},
 			});
-
-			// Caso a quantidade de tickets por usuário for menor do que o total disponível, vamos retornar apenas o disponível.
+			
+			// Caso a quantidade de tickets por usuário for menor do que o total disponível, vamos retornar a quantidade de tickets por usuário.
 			const ticketTypesAvailable = event.ticketTypes.map(({quantity, ...ticket}) => {
 				return {
 					...ticket,
 					quantityAvailablePerUser:
-						ticket.quantityAvailablePerUser < quantity
-							? ticket.quantityAvailablePerUser
+						event.maxTicketsPerUser < quantity
+							? event.maxTicketsPerUser
 							: quantity,
 				};
 			});

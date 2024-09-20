@@ -15,7 +15,6 @@ model User {
   email           String            @unique
   phone           String?
   cpf             String?           @unique
-  role            String
   createdEvents   Event[]
   purchaseOrders  PurchaseOrder[]
   eventOrganizers EventOrganizers[]
@@ -35,6 +34,7 @@ model Event {
   endDate           DateTime
   salesStartDate    DateTime?
   showStartDate     DateTime?
+  maxTicketsPerUser Int
   format            String
   ageRating         Int
   additionalDetails String
@@ -100,10 +100,10 @@ model Attraction {
 }
 
 model EventCategory {
-  id          String  @id @default(uuid())
-  name        String
-  isActive    Boolean @default(true)
-  events      Event[]
+  id       String  @id @default(uuid())
+  name     String
+  isActive Boolean @default(true)
+  events   Event[]
 
   @@map("eventCategories")
 }
@@ -124,7 +124,6 @@ model TicketType {
   description               String
   price                     Float
   quantity                  Int
-  quantityAvailablePerUser  Int
   salesStartDate            DateTime?
   salesEndDate              DateTime?
   isActive                  Boolean   @default(true)
@@ -168,15 +167,15 @@ model Producer {
 }
 
 model Address {
-  id          String  @id @default(uuid())
-  street      String
-  number      String
-  complement  String?
+  id           String  @id @default(uuid())
+  street       String
+  number       String
+  complement   String?
   neighborhood String
-  city        String
-  state       String
-  zipCode     String
-  Event       Event[]
+  city         String
+  state        String
+  zipCode      String
+  Event        Event[]
 
   @@map("addresses")
 }
