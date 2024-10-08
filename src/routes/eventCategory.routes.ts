@@ -1,6 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { EventCategoryUseCase } from "../usecases/eventCategory.usecase";
 import { z } from "zod";
+import { jwtValidator } from "../middlewares/auth.middleware";
 
 const eventCategoryUseCase = new EventCategoryUseCase();
 
@@ -10,7 +11,7 @@ const createEventCategorySchema = z.object({
 });
 
 export async function eventCategoryRoutes(fastify: FastifyInstance) {
-    fastify.post<{ Body: { name: string, isActive: boolean } }>('/', async (req, reply) => {
+    fastify.post<{ Body: { name: string, isActive: boolean } }>('/', {preHandler:[jwtValidator], handler: async (req, reply) => {
         const { name, isActive } = req.body;
 
         try {
@@ -27,7 +28,7 @@ export async function eventCategoryRoutes(fastify: FastifyInstance) {
                 reply.code(500).send({ error: 'Internal Server Error' });
             }
         }
-    });
+    }});
 
     fastify.get('/', async (req, reply) => {
         try {

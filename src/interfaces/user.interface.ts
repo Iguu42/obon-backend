@@ -4,7 +4,6 @@ export interface User {
 	firstName: string;
 	lastName: string;
 	email: string;
-	role: string;
 }
 
 export interface UserCreate {
@@ -24,13 +23,12 @@ export interface UserUpdateByClerk {
 
 export interface UserUpdate {
 	id: string
-	role?: string;
 	cpf?: string | null;
 	phone?: string | null;
 }
 
 export interface UserRepository {
-	findAllEventsByExternalId(externalId: string): any;
+	findAllEventsByUserId(id: string): any;
 	findUserByExternalId(externalId: string): Promise<User>;
 	findByEmail(email: string): Promise<User | null>;
 	create(data: UserCreate): Promise<User>;

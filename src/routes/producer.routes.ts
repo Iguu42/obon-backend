@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ProducerUseCase } from "../usecases/producer.usecase";
 import { FastifyInstance } from "fastify";
+import { jwtValidator } from "../middlewares/auth.middleware";
 
 
 const producerUseCase = new ProducerUseCase();
@@ -13,7 +14,7 @@ const createProducerSchema = z.object({
 });
 
 export async function producerRoutes(fastify: FastifyInstance) {
-    fastify.post<{ Body: { name: string, email: string, description: string, imageUrl: string } }>('/', async (req, reply) => {
+    fastify.post<{ Body: { name: string, email: string, description: string, imageUrl: string } }>('/', {preHandler:[jwtValidator], handler: async (req, reply) => {
         const { name, email, description, imageUrl } = req.body;
 
         try {
@@ -30,14 +31,14 @@ export async function producerRoutes(fastify: FastifyInstance) {
                 reply.code(500).send({ error: 'Internal Server Error' });
             }
         }
-    });
+    }});
 
-    fastify.get('/', async (req, reply) => {
+    fastify.get('/', {preHandler:[jwtValidator], handler: async (req, reply) => {
         try {
             const producers = await producerUseCase.getAllProducers();
             reply.code(200).send(producers);
         } catch (error) {
             reply.code(500).send({ error: 'Internal Server Error' });
         }
-    });
+    }});
 };

@@ -1,17 +1,17 @@
 import { FastifyInstance } from "fastify";
 import { jwtValidator } from "../middlewares/auth.middleware";
 import { UserUseCase } from "../usecases/user.usecase";
-import { UserUpdate } from "../interfaces/user.interface";
+import { User, UserUpdate } from "../interfaces/user.interface";
 
 const userUseCase = new UserUseCase();
 
 export async function userRoutes(fastify: FastifyInstance) {
-	fastify.get<{ Params: { externalId: string } }>("/events", {
+	fastify.get("/events", {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const externalId = req.params.externalId;
 			try {
-				const data = await userUseCase.findAllEventsByExternalId(externalId);
+				const user = req.user as User
+				const data = await userUseCase.findAllEventsByUserId(user.id);
 				reply.code(200).send(data);
 			} catch (error) {
 				reply.code(404).send(error);
@@ -19,27 +19,26 @@ export async function userRoutes(fastify: FastifyInstance) {
 		},
 	});
 
-	fastify.get<{ Params: { externalId: string } }>("/", {
+	fastify.get("/", {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const externalId = req.params.externalId;
+			const user = req.user as User
 			try {
-				const data = await userUseCase.findUserByExternalOrId(externalId);
-				reply.code(200).send(data);
+				reply.code(200).send(user);
 			} catch (error) {
 				reply.code(404).send(error);
 			}
 		},
 	});
 
-	fastify.patch<{ Body: UserUpdate; Params: { externalId: string } }>("/", {
+	fastify.patch<{ Body: UserUpdate}>("/", {
 		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const externalId = req.params.externalId;
+			const user = req.user as User
 			const { role, cpf, phone } = req.body;
 			try {
 				const data = await userUseCase.update({
-					id: externalId,
+					id: user.id,
 					role,
 					cpf,
 					phone,
