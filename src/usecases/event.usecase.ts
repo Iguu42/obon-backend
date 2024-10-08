@@ -1,8 +1,10 @@
 import { Event, EventCreate, EventPreview, EventRepository, RecentEvents } from "../interfaces/event.interface";
+import { User } from "../interfaces/user.interface";
+import { UserRepositoryPrisma } from "../repositories/user.repository";
 
 class EventUseCase {
     private eventRepository: EventRepository;
-
+    private userRepository: UserRepositoryPrisma = new UserRepositoryPrisma()
     constructor(eventRepository: EventRepository) {
         this.eventRepository = eventRepository;
     }

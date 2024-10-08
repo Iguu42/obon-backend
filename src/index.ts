@@ -883,13 +883,15 @@ app.register(swaggerUi, {
     },
     transformSpecificationClone: true,
 });
-
 app.register(cors, {
     origin: [
         'http://localhost:5173',
         'https://site-de-eventos-frontend.vercel.app'
     ]
 });
+app.register(webhookClerk, {
+    prefix:'/clerk'
+})
 app.register(eventCategoryRoutes, {
     prefix: '/event/categories'
 });

@@ -8,6 +8,7 @@ export interface Event {
 	categoryId: string;
 	startDate: Date;
 	endDate: Date;
+	maxTicketsPerUser: number;
 	format: string;
 	producerId: string;
 	ageRating: number;
@@ -41,6 +42,7 @@ export interface EventCreate {
 	startDate: Date;
 	endDate: Date;
 	format: string;
+	maxTicketsPerUser: number;
 	producerId: string;
 	ageRating: number;
 	additionalDetails: string;
@@ -54,6 +56,7 @@ export interface EventById {
 	description: string;
 	capacity: number;
 	status: string | null;
+	maxTicketsPerUser: number;
 	startDate: Date;
 	endDate: Date;
 	salesStartDate: Date | null;
@@ -113,10 +116,16 @@ export interface RecentEvents {
 	}[];
 }
 
+export interface EventValidate {
+	id: string;
+	creatorId:string
+}
+
 export interface EventRepository {
 	create(data: EventCreate): Promise<Event>;
 	getEventsByCategory(categoryId: string): Promise<EventPreview[]>;
 	getEventById(id: string): Promise<EventById>;
 	getEventsByCreatorId(creatorId: string): Promise<EventPreview[]>;
 	getRecentEvents(): Promise<RecentEvents[]>;
+	getEventToValidate(id:string): Promise<EventValidate>;
 }

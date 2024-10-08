@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { Webhook } from "svix";
 import { UserUseCase } from "../usecases/user.usecase";
 import { env } from '../env';
+import { createClerkClient } from "@clerk/fastify";
 
 export async function webhookClerk(fastify: FastifyInstance) {
   const userUseCase = new UserUseCase();
@@ -13,6 +14,10 @@ export async function webhookClerk(fastify: FastifyInstance) {
     if (!WEBHOOK_SECRET) {
       throw new Error("You need a WEBHOOK_SECRET in your .env");
     }
+
+    const clerkClient = createClerkClient({
+      secretKey: env.CLERK_API_KEY,
+    });
 
     // Grab the headers and body
     const headers = request.headers;
@@ -56,9 +61,6 @@ export async function webhookClerk(fastify: FastifyInstance) {
     const { id, email_addresses, first_name, last_name } = evt.data;
     const { type, data } = evt;
 
-    //TODO:
-    //Criar função para gerenciar as respostas do webhook
-
     switch (type) {
       case 'user.deleted':
         console.log('user deleted')
@@ -78,6 +80,11 @@ export async function webhookClerk(fastify: FastifyInstance) {
             lastName: last_name,
             email: email_addresses[0].email_address,
           });
+          await clerkClient.users.updateUser(id, {
+						privateMetadata: {
+							role: "user",
+						},
+					})
           return reply.send(data);
         } catch (error) {
           reply.send(error)

@@ -5,6 +5,7 @@ import {
 	EventCreate,
 	EventPreview,
 	EventRepository,
+	EventValidate,
 	RecentEvents,
 } from "../interfaces/event.interface";
 import { Prisma } from "@prisma/client";
@@ -20,6 +21,7 @@ class EventRepositoryPrisma implements EventRepository {
 					categoryId: data.categoryId,
 					startDate: data.startDate,
 					endDate: data.endDate,
+					maxTicketsPerUser:data.maxTicketsPerUser,
 					format: data.format,
 					ageRating: data.ageRating,
 					additionalDetails: data.additionalDetails,
@@ -85,7 +87,6 @@ class EventRepositoryPrisma implements EventRepository {
 							description: true,
 							price: true,
                             quantity:true,
-							quantityAvailablePerUser: true,
 							salesStartDate: true,
 							salesEndDate: true,
 							isActive: true,
@@ -129,14 +130,14 @@ class EventRepositoryPrisma implements EventRepository {
 					},
 				},
 			});
-
-			// Caso a quantidade de tickets por usuário for menor do que o total disponível, vamos retornar apenas o disponível.
+			
+			// Caso a quantidade de tickets por usuário for menor do que o total disponível, vamos retornar a quantidade de tickets por usuário.
 			const ticketTypesAvailable = event.ticketTypes.map(({quantity, ...ticket}) => {
 				return {
 					...ticket,
 					quantityAvailablePerUser:
-						ticket.quantityAvailablePerUser < quantity
-							? ticket.quantityAvailablePerUser
+						event.maxTicketsPerUser < quantity
+							? event.maxTicketsPerUser
 							: quantity,
 				};
 			});
@@ -206,6 +207,23 @@ class EventRepositoryPrisma implements EventRepository {
         } catch (error) {
             throw new Error('Unable to get recent events');
         }
+	}
+
+	async getEventToValidate(id:string): Promise <EventValidate>{
+		try{
+			return prisma.event.findFirstOrThrow({
+				where:{
+					id
+				},
+				select:{
+					id:true,
+					creatorId:true
+				}
+			})
+
+		}catch (error) {
+			throw new Error("Unable to get event by id");
+		}
 	}
 }
 

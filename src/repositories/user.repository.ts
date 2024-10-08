@@ -9,8 +9,7 @@ class UserRepositoryPrisma implements UserRepository {
 					externalId: data.externalId,
 					firstName: data.firstName,
 					lastName: data.lastName,
-					email: data.email,
-					role: "user",
+					email: data.email
 				},
 			});
 		} catch (error) {
@@ -48,16 +47,11 @@ class UserRepositoryPrisma implements UserRepository {
 		}
 	}
 
-	async findAllEventsByExternalId(externalId: string): Promise<any> {
+	async findAllEventsByUserId(id: string): Promise<any> {
 		try {
 			return await prisma.$transaction(async (prisma) => {
-				const user = await prisma.user.findFirstOrThrow({
-					where: { externalId },
-					select: { id: true },
-				});
-
 				const purchaseOrders = await prisma.purchaseOrder.findMany({
-					where: { userId: user.id },
+					where: { userId: id },
 					select: {
 						id: true,
 						eventId: true,
@@ -181,21 +175,20 @@ class UserRepositoryPrisma implements UserRepository {
 
 	async userUpdate(data: UserUpdate): Promise<UserUpdate> {
 		try {
-		  const result = await prisma.user.update({
-			where: {
-			  id: data.id,
-			},
-			data: {
-			  role: data.role,
-			  cpf: data.cpf,
-			  phone: data.phone,
-			},
-		  });
-		  return result;
+			const result = await prisma.user.update({
+				where: {
+					id: data.id,
+				},
+				data: {
+					cpf: data.cpf,
+					phone: data.phone,
+				},
+			});
+			return result;
 		} catch (error) {
-		  throw new Error("Failed to update user");
+			throw new Error("Failed to update user");
 		}
-	  }
+	}
 }
 
 export { UserRepositoryPrisma };

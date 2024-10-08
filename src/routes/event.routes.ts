@@ -2,12 +2,14 @@ import { FastifyInstance } from "fastify";
 import { EventRepositoryPrisma } from "../repositories/event.repository";
 import { EventUseCase } from "../usecases/event.usecase";
 import { EventCreate } from "../interfaces/event.interface";
+import { jwtValidator } from "../middlewares/auth.middleware";
+import { User } from "../interfaces/user.interface";
 
 const eventRepository = new EventRepositoryPrisma();
 const eventUseCase = new EventUseCase(eventRepository);
 
 export async function eventRoutes(fastify: FastifyInstance) {
-	fastify.post<{ Body: EventCreate }>("/", async (req, reply) => {
+	fastify.post<{ Body: EventCreate }>("/", {preHandler:[jwtValidator], handler:async (req, reply) => {
 		const {
 			title,
 			description,
@@ -20,9 +22,8 @@ export async function eventRoutes(fastify: FastifyInstance) {
 			producerId,
 			ageRating,
 			additionalDetails,
-			creatorId,
 		} = req.body;
-
+		const user = req.user as User
 		try {
 			const data = await eventUseCase.create({
 				title,
@@ -36,7 +37,7 @@ export async function eventRoutes(fastify: FastifyInstance) {
 				producerId,
 				ageRating,
 				additionalDetails,
-				creatorId,
+				creatorId: user.id,
 			});
 			reply.code(201).send(data);
 		} catch (error: any) {
@@ -45,7 +46,7 @@ export async function eventRoutes(fastify: FastifyInstance) {
 				.code(400)
 				.send({ error: error.message || "Unable to create event" });
 		}
-	});
+	}});
 
 	fastify.get<{ Params: { categoryId: string } }>("/category/:categoryId", {
 		handler: async (req, reply) => {
@@ -71,12 +72,12 @@ export async function eventRoutes(fastify: FastifyInstance) {
 		},
 	});
 
-	fastify.get<{ Params: { creatorId: string } }>("/creator/:creatorId", {
-		preHandler: [],
+	fastify.get<{ Params: { creatorId: string } }>("/created", {
+		preHandler: [jwtValidator],
 		handler: async (req, reply) => {
-			const { creatorId } = req.params;
+			const { id } = req.user as User;
 			try {
-				const data = await eventUseCase.getEventsByCreatorId(creatorId);
+				const data = await eventUseCase.getEventsByCreatorId(id);
 				reply.code(200).send(data);
 			} catch (error) {
 				reply.code(404).send(error);

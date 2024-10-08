@@ -2,15 +2,15 @@ import { User, UserCreate, UserRepository, UserUpdate, UserUpdateByClerk } from 
 import { UserRepositoryPrisma } from "../repositories/user.repository";
 
 class UserUseCase {
-	private userRepository: UserRepository = new UserRepositoryPrisma();
+    private userRepository: UserRepository = new UserRepositoryPrisma();
 
-	constructor() {}
+    constructor() { }
 
 
-    async findAllEventsByExternalId(externalId: string): Promise<any> {
-        return await this.userRepository.findAllEventsByExternalId(externalId);
+    async findAllEventsByUserId(id: string): Promise<any> {
+        return await this.userRepository.findAllEventsByUserId(id);
     }
-    
+
     async create({ externalId, firstName, lastName, email }: UserCreate): Promise<User> {
         const existingUser = await this.userRepository.findByEmail(email);
         if (existingUser) {
@@ -34,17 +34,11 @@ class UserUseCase {
     }
 
     async findUserByExternalOrId(id: string): Promise<User | null> {
-        const data = await this.userRepository.findUserByExternalOrId(id);
-        if (!data) throw new Error('User not found')
-        return data;
+        return await this.userRepository.findUserByExternalOrId(id);
     }
 
     async update({ id, role, cpf, phone }: UserUpdate): Promise<UserUpdate> {
-        const user = await this.userRepository.findUserByExternalOrId(id)
-        if(!user){
-            throw new Error('User not found');
-        }
-        return await this.userRepository.userUpdate({ id: user.id, role, cpf, phone });
+        return await this.userRepository.userUpdate({ id, role, cpf, phone });
     }
 }
 

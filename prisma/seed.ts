@@ -11,7 +11,6 @@ async function main() {
       email: 'john.doe@example.com',
       phone: '123456789',
       cpf: '11122233344',
-      role: 'USER',
     },
   });
 
@@ -23,7 +22,6 @@ async function main() {
       email: 'jane.smith@example.com',
       phone: '987654321',
       cpf: '55566677788',
-      role: 'ORGANIZER',
     },
   });
 
@@ -68,6 +66,7 @@ async function main() {
       startDate: new Date('2024-12-01T19:00:00Z'),
       endDate: new Date('2024-12-01T23:00:00Z'),
       format: 'Presencial',
+      maxTicketsPerUser: 4,
       ageRating: 18,
       additionalDetails: 'Trazer ingressos digitais.',
       creatorId: user2.id,  // Usuário organizador
@@ -83,8 +82,7 @@ async function main() {
       description: 'Ingresso Pista',
       price: 100.00,
       quantity: 200,
-      quantityAvailablePerUser: 2,
-      isActive: true,
+      isActive: true
     },
   });
 
@@ -94,8 +92,7 @@ async function main() {
       description: 'Ingresso VIP',
       price: 300.00,
       quantity: 50,
-      quantityAvailablePerUser: 1,
-      isActive: true,
+      isActive: true
     },
   });
 
