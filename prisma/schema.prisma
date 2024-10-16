@@ -124,7 +124,6 @@ model TicketType {
   description               String
   price                     Float
   quantity                  Int
-  quantityAvailablePerUser  Int
   salesStartDate            DateTime?
   salesEndDate              DateTime?
   isActive                  Boolean   @default(true)
