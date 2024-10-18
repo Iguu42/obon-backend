@@ -11,6 +11,7 @@ import { userRoutes } from "./routes/user.routes";
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import { withRefResolver } from 'fastify-zod';
+import { webhookClerk } from "./routes/clerkWebhook.routes";
 
 const app: FastifyInstance = fastify({ logger: true });
 
@@ -58,6 +59,7 @@ app.register(purchaseOrderRoutes, { prefix: '/purchaseorders' });
 app.register(ticketTypeRoutes, { prefix: '/ticketType' });
 app.register(eventRoutes, { prefix: '/events' });
 app.register(userRoutes, { prefix: '/users' });
+app.register(webhookClerk, {prefix: '/clerk'});
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
     if (err) {

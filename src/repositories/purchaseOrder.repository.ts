@@ -1,67 +1,112 @@
 import { prisma } from "../database/prisma-client";
-import { PurchaseOrderAndTicketsCreate, PurchaseOrderRepository } from "../interfaces/purchaseOrder.interface";
+import {
+	PurchaseOrderAndTicketsCreate,
+	PurchaseOrderInfo,
+	PurchaseOrderRepository,
+} from "../interfaces/purchaseOrder.interface";
 
 class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
+	async create(data: PurchaseOrderAndTicketsCreate): Promise<any> {
+		try {
+			const { userId, eventId, ticketTypes, status } = data;
 
-    async create(data: PurchaseOrderAndTicketsCreate): Promise<any> {
-        try {
-            const { userId, eventId, ticketTypes, status } = data;
+			return await prisma.$transaction(async (prisma) => {
+				let totalPrice = 0;
+				const ticketCreationData: any[] = [];
 
-            return await prisma.$transaction(async (prisma) => {
-                let totalPrice = 0;
-                const ticketCreationData: any[] = [];
+				for (const ticketTypeData of ticketTypes) {
+					const { ticketTypeId, participantName, participantEmail } =
+						ticketTypeData;
 
-                for (const ticketTypeData of ticketTypes) {
-                    const { ticketTypeId, participantName, participantEmail } = ticketTypeData;
+					const ticketType = await prisma.ticketType.findUniqueOrThrow({
+						where: { id: ticketTypeId },
+					});
+					
+					totalPrice += ticketType.price;
 
-                    const ticketType = await prisma.ticketType.findUnique({
-                        where: { id: ticketTypeId }
-                    });
+					ticketCreationData.push({
+						ticketTypeId,
+						participantName,
+						participantEmail,
+						price: ticketType.price,
+						status,
+						purchaseDate: new Date(),
+					});
 
-                    if (!ticketType || ticketType.quantity < 1) {
-                        throw new Error(`Insufficient ticket quantity available for ${ticketType?.description}. Available: ${ticketType?.quantity}, Requested: 1`);
+					await prisma.ticketType.update({
+						where: { id: ticketTypeId },
+						data: { quantity: ticketType.quantity - 1 },
+					});
+				}
+
+				const purchaseOrder = await prisma.purchaseOrder.create({
+					data: {
+						userId,
+						eventId,
+						totalPrice,
+						quantityTickets: ticketTypes.length,
+						status,
+					},
+				});
+
+				await prisma.ticket.createMany({
+					data: ticketCreationData.map((ticket) => ({
+						...ticket,
+						purchaseOrderId: purchaseOrder.id,
+					})),
+				});
+
+				return purchaseOrder;
+			});
+		} catch (error) {
+			throw new Error(`Error creating purchase order: ${error}`);
+		}
+	}
+
+	async findPurchaseOrdersByUserAndEventId(
+		id: string,
+		eventId: string
+	): Promise<PurchaseOrderInfo[]> {
+		try {
+			const purchaseOrders = await prisma.purchaseOrder.findMany({
+				where: { userId: id, eventId: eventId },
+				select: {
+					id: true,
+					eventId: true,
+					status: true,
+					tickets: {
+						select: {
+							id: true,
+							ticketTypeId: true,
+							ticketType: {
+								select: {
+									description: true,
+									isActive: true,
+									price: true,
+								},
+							},
+							participantName: true,
+							participantEmail: true,
+							price: true,
+							status: true,
+							purchaseDate: true,
+							seatLocation: true,
+						},
+					},
+                    event:{
+                        select:{
+                            maxTicketsPerUser:true
+                        }
                     }
+				},
+			});
 
-                    totalPrice += ticketType.price;
-
-                    ticketCreationData.push({
-                        ticketTypeId,
-                        participantName,
-                        participantEmail,
-                        price: ticketType.price,
-                        status,
-                        purchaseDate: new Date(),
-                    });
-
-                    await prisma.ticketType.update({
-                        where: { id: ticketTypeId },
-                        data: { quantity: ticketType.quantity - 1 }
-                    });
-                }
-
-                const purchaseOrder = await prisma.purchaseOrder.create({
-                    data: {
-                        userId,
-                        eventId,
-                        totalPrice,
-                        quantityTickets: ticketTypes.length,
-                        status
-                    }
-                });
-
-                await prisma.ticket.createMany({
-                    data: ticketCreationData.map(ticket => ({
-                        ...ticket,
-                        purchaseOrderId: purchaseOrder.id
-                    }))
-                });
-
-                return purchaseOrder;
-            });
-        } catch (error) {
-            throw new Error(`Error creating purchase order: ${error}`);
-        }
-    }
-};
+			return purchaseOrders;
+		} catch (error) {
+			console.error("Error finding events by external ID:", error);
+			throw error;
+		}
+	}
+}
 
 export { PurchaseOrderRepositoryPrisma };

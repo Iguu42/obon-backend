@@ -37,8 +37,8 @@ class UserUseCase {
         return await this.userRepository.findUserByExternalOrId(id);
     }
 
-    async update({ id, role, cpf, phone }: UserUpdate): Promise<UserUpdate> {
-        return await this.userRepository.userUpdate({ id, role, cpf, phone });
+    async update({ id, cpf, phone }: UserUpdate): Promise<UserUpdate> {
+        return await this.userRepository.userUpdate({ id, cpf, phone });
     }
 }
 

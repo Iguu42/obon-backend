@@ -3,7 +3,6 @@ export interface TicketTypeCreate {
 	description: string;
 	price: number;
 	quantity: number;
-	quantityAvailablePerUser: number;
 	salesStartDate?: Date;
 	salesEndDate?: Date;
 	isActive?: boolean;
@@ -15,7 +14,6 @@ export interface TicketType {
 	description: string;
 	price: number;
 	quantity: number;
-	quantityAvailablePerUser: number;
 	salesStartDate: Date | null;
 	salesEndDate: Date | null;
 	isActive: boolean;
@@ -23,4 +21,5 @@ export interface TicketType {
 
 export interface TicketTypeRepository {
 	create(data: TicketTypeCreate): Promise<TicketType>;
+	findTicketTypeById(ticketTypeId: string): Promise<TicketType>
 }
