@@ -77,7 +77,6 @@ export interface EventById {
 		id: string;
 		description: string;
 		price: number;
-		quantityAvailablePerUser: number;
 		salesStartDate: Date | null;
 		salesEndDate: Date | null;
 		isActive: boolean;

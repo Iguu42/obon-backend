@@ -21,4 +21,5 @@ export interface TicketType {
 
 export interface TicketTypeRepository {
 	create(data: TicketTypeCreate): Promise<TicketType>;
+	findTicketTypeById(ticketTypeId: string): Promise<TicketType>
 }
