@@ -30,8 +30,7 @@ export const getUserEventsSchema = {
         type: "object",
         properties: {
           id: { type: "string" },
-          email: { type: "string" },
-          role: { type: "string" }
+          email: { type: "string" }
         }
       },
       404: {
@@ -49,11 +48,10 @@ export const getUserEventsSchema = {
     body: {
       type: "object",
       properties: {
-        role: { type: "string" },
         cpf: { type: "string" },
         phone: { type: "string" }
       },
-      required: ["role", "cpf", "phone"]
+      required: ["cpf", "phone"]
     },
     response: {
       200: {
