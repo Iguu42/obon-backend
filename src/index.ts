@@ -8,52 +8,61 @@ import { purchaseOrderRoutes } from "./routes/purchaseOrder.routes";
 import { ticketTypeRoutes } from "./routes/ticketType.routes";
 import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
-import { clerkPlugin } from '@clerk/fastify';
-import { webhookClerk } from "./routes/clerkWebhook.routes";
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
+import { withRefResolver } from 'fastify-zod';
 
-const app: FastifyInstance = fastify({ logger: false });
+const app: FastifyInstance = fastify({ logger: true });
 
 const port = parseInt(env.PORT as string);
 
-app.register(clerkPlugin, {secretKey:env.CLERK_API_KEY});
 app.register(cors, {
     origin: [
         'http://localhost:5173',
         'https://site-de-eventos-frontend.vercel.app'
     ]
 });
-app.register(webhookClerk, {
-    prefix:'/clerk'
-})
-app.register(eventCategoryRoutes, {
-    prefix: '/event/categories'
-});
-app.register(producerRoutes, {
-    prefix: '/producers'
-});
-app.register(assetRoutes, {
-    prefix: '/assets'
-});
-app.register(purchaseOrderRoutes, {
-    prefix: '/purchaseorders'
+
+app.register(swagger, withRefResolver({
+  openapi: {
+    info: {
+      title: 'API de Eventos - OBON',
+      description: 'Documentação da API de eventos',
+      version: '1.0.0',
+    },
+    servers: [
+      {
+        url: "https://obon-backend-production.up.railway.app",
+        description: "prd host"
+      },
+      {
+        url: "http://localhost:3000",
+        description: "local host"
+      }
+    ],
+    tags: [
+      { name: 'Users', description: 'Operações relacionadas a usuários' },
+    ]
+  },
+}));
+
+app.register(swaggerUi, {
+  routePrefix: '/doc',
+  exposeRoute: true
 });
 
-app.register(ticketTypeRoutes, {
-    prefix: '/ticketType'
-});
-
-app.register(eventRoutes, {
-    prefix: '/events'
-});
-
-app.register(userRoutes, {
-    prefix: '/users'
-});
+app.register(eventCategoryRoutes, { prefix: '/event/categories' });
+app.register(producerRoutes, { prefix: '/producers' });
+app.register(assetRoutes, { prefix: '/assets' });
+app.register(purchaseOrderRoutes, { prefix: '/purchaseorders' });
+app.register(ticketTypeRoutes, { prefix: '/ticketType' });
+app.register(eventRoutes, { prefix: '/events' });
+app.register(userRoutes, { prefix: '/users' });
 
 app.listen({ port: port || 3000, host: '0.0.0.0' }, function (err, address) {
     if (err) {
-        app.log.error(err)
-        process.exit(1)
+        app.log.error(err);
+        process.exit(1);
     }
-    app.log.info(`server listening on ${address}`)
+    app.log.info(`server listening on ${address}`);
 });
