@@ -15,7 +15,6 @@ export interface PurchaseOrder {
 }
 
 export interface PurchaseOrderAndTicketsCreate {
-	userId: string;
 	eventId: string;
 	ticketTypes: TicketTypeQuantity[];
 	status: string;

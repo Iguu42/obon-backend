@@ -8,7 +8,7 @@ import {
 class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
 	async create(data: PurchaseOrderAndTicketsCreate): Promise<any> {
 		try {
-			const { userId, eventId, ticketTypes, status } = data;
+			const {user, eventId, ticketTypes, status } = data;
 
 			return await prisma.$transaction(async (prisma) => {
 				let totalPrice = 0;
@@ -41,7 +41,7 @@ class PurchaseOrderRepositoryPrisma implements PurchaseOrderRepository {
 
 				const purchaseOrder = await prisma.purchaseOrder.create({
 					data: {
-						userId,
+						userId: user.id,
 						eventId,
 						totalPrice,
 						quantityTickets: ticketTypes.length,
