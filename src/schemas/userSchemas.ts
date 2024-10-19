@@ -2,17 +2,6 @@ export const getUserEventsSchema = {
     description: "Obter todos os eventos do usuário",
     tags: ["Users"],
     response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            eventId: { type: "string" },
-            eventName: { type: "string" },
-            eventDate: { type: "string" }
-          }
-        }
-      },
       404: {
         type: "object",
         properties: {
@@ -30,7 +19,12 @@ export const getUserEventsSchema = {
         type: "object",
         properties: {
           id: { type: "string" },
-          email: { type: "string" }
+          externalId: {type: "string"},
+          firstName: {type: "string"},
+          lastName: {type: "string"},
+          email: { type: "string" },
+          phone: {type: "string"},
+          cpf: {type: "string"}
         }
       },
       404: {
@@ -57,7 +51,13 @@ export const getUserEventsSchema = {
       200: {
         type: "object",
         properties: {
-          message: { type: "string" }
+          id: { type: "string" },
+          externalId: { type: "string" },
+          firstName: { type: "string" },
+          lastName: { type: "string" },
+          email: { type: "string" },
+          phone: { type: "string" },
+          cpf: { type: "string" },
         }
       },
       400: {
