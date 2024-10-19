@@ -68,9 +68,8 @@ export async function webhookClerk(fastify: FastifyInstance) {
           const data = await userUseCase.deleteByClerk(id);
           return reply.send(data);
         } catch (error) {
-          reply.send(error)
+          return reply.send(error)
         }
-        break;
       case 'user.created':
         console.log('user created')
         try {
@@ -87,9 +86,8 @@ export async function webhookClerk(fastify: FastifyInstance) {
 					})
           return reply.send(data);
         } catch (error) {
-          reply.send(error)
+          return reply.send(error)
         }
-        break;
 
       case 'user.updated':
         console.log('Webhook body:', data);
@@ -103,9 +101,8 @@ export async function webhookClerk(fastify: FastifyInstance) {
           });
           return reply.send(data);
         } catch (error) {
-          reply.send(error)
+          return reply.send(error)
         }
-        break;
 
       case 'session.ended':
         console.log('Sessão encerrada');
