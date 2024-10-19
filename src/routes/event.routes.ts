@@ -22,6 +22,7 @@ export async function eventRoutes(fastify: FastifyInstance) {
 			producerId,
 			ageRating,
 			additionalDetails,
+			maxTicketsPerUser
 		} = req.body;
 		const user = req.user as User
 		try {
@@ -38,6 +39,7 @@ export async function eventRoutes(fastify: FastifyInstance) {
 				ageRating,
 				additionalDetails,
 				creatorId: user.id,
+				maxTicketsPerUser
 			});
 			reply.code(201).send(data);
 		} catch (error: any) {
