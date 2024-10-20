@@ -38,6 +38,9 @@ const permissions: Record<string, RoutePermissions> = {
 	},
 	"/assets/upload/:filename":{
 		DELETE:["admin", "user"]
+	},
+	"/address":{
+		POST: ["admin", "user"]
 	}
 };
 
